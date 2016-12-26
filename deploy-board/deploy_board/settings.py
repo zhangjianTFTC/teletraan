@@ -63,6 +63,12 @@ TELETRAAN_SERVICE_VERSION = os.getenv("TELETRAAN_SERVICE_VERSION")
 TELETRAAN_SERVICE_FIXED_OAUTH_TOKEN = os.getenv("TELETRAAN_SERVICE_FIXED_OAUTH_TOKEN", None)
 TELETRAAN_HOST_INFORMATION_URL = os.getenv("HOST_INFORMATION_URL")
 
+# CMDB vars
+CMDB_API_HOST = os.getenv("CMDB_API_HOST")
+CMDB_INSTANCE_URL = os.getenv("CMDB_INSTANCE_URL")
+CMDB_UI_HOST = os.getenv("CMDB_UI_HOST")
+PHOBOS_URL = os.getenv("PHOBOS_URL")
+
 LOG_DIR = os.getenv("LOG_DIR")
 LOG_LEVEL = os.getenv("LOG_LEVEL")
 
@@ -87,7 +93,7 @@ LOGGING = {
             'level': LOG_LEVEL,
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '%s/service.log' % LOG_DIR,
-            'maxBytes': 1024 * 1024 * 5, # 5 MB
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'standard',
         },
@@ -95,14 +101,18 @@ LOGGING = {
             'level': LOG_LEVEL,
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '%s/access.log' % LOG_DIR,
-            'maxBytes': 1024 * 1024 * 5, # 5 MB
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'standard',
+        },
+        'console': {
+            'level': LOG_LEVEL,
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
         '': {
-            'handlers': ['default'],
+            'handlers': ['default', 'console'],
             'level': LOG_LEVEL,
             'propagate': True
         },
@@ -174,6 +184,9 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, "static"),
 )
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Site global metrics
 SITE_METRICS_CONFIGS = []
 # Deep Teletraan backend health check url
@@ -182,6 +195,11 @@ TELETRAAN_SERVICE_HEALTHCHECK_URL = os.getenv("TELETRAAN_SERVICE_HEALTHCHECK_URL
 # Pinterest specific settings
 IS_PINTEREST = True if os.getenv("IS_PINTEREST", "false") == "true" else False
 BUILD_URL = "https://jenkins.pinadmin.com/job/"
+
+# use Rodimus if present
+RODIMUS_SERVICE_URL = os.getenv("RODIMUS_SERVICE_URL", None)
+RODIMUS_SERVICE_VERSION = os.getenv("RODIMUS_SERVICE_VERSION", None)
+
 if IS_PINTEREST:
     # use knox if present
     KNOX_SESSION_ID = os.getenv("KNOX_SESSION_ID")
@@ -223,3 +241,60 @@ if IS_PINTEREST:
 
     DEFAULT_START_TIME = "-1d"
 
+    #Pinterest Default Cloud Provider
+    DEFAULT_PROVIDER = 'AWS'
+
+    #Pinterest Default AMI image name
+    DEFAULT_CMP_IMAGE = 'cmp_base'
+
+    # Pinterest default placement strategy mapping.
+    PINTEREST_SECURITY_GROUP_PLACEMENTMAPPING = {
+        'dev-private-service': ['dev-private-service-us-east-1a',
+                                'dev-private-service-us-east-1c',
+                                'dev-private-service-us-east-1d',
+                                'dev-private-service-us-east-1e'],
+        'dev-public-service': ['dev-public-service-us-east-1a',
+                               'dev-public-service-us-east-1c',
+                               'dev-public-service-us-east-1d',
+                               'dev-public-service-us-east-1e'],
+        'dev-private-storage': ['dev-private-service-us-east-1a',
+                                'dev-private-service-us-east-1c',
+                                'dev-private-service-us-east-1d',
+                                'dev-private-service-us-east-1e'],
+        'prod-private-service': ['prod-private-service-us-east-1a',
+                                 'prod-private-service-us-east-1c',
+                                 'prod-private-service-us-east-1d',
+                                 'prod-private-service-us-east-1e',
+                                 'prod-private-tools-us-east-1a',
+                                 'prod-private-tools-us-east-1c',
+                                 'prod-private-tools-us-east-1d',
+                                 'prod-private-tools-us-east-1e'],
+        'prod-private-tools': ['prod-private-service-us-east-1a',
+                               'prod-private-service-us-east-1c',
+                               'prod-private-service-us-east-1d',
+                               'prod-private-service-us-east-1e',
+                               'prod-private-tools-us-east-1a',
+                               'prod-private-tools-us-east-1c',
+                               'prod-private-tools-us-east-1d',
+                               'prod-private-tools-us-east-1e'],
+        'prod-public-service': ['prod-public-service-us-east-1a',
+                                'prod-public-service-us-east-1c',
+                                'prod-public-service-us-east-1d',
+                                'prod-public-service-us-east-1e'],
+        'prod-private-storage': ['prod-private-service-us-east-1a',
+                                 'prod-private-service-us-east-1c',
+                                 'prod-private-service-us-east-1d',
+                                 'prod-private-service-us-east-1e',
+                                 'prod-private-tools-us-east-1a',
+                                 'prod-private-tools-us-east-1c',
+                                 'prod-private-tools-us-east-1d',
+                                 'prod-private-tools-us-east-1e'],
+        'rtp-prod-private-service': ['prod-private-service-us-east-1a',
+                                     'prod-private-service-us-east-1c',
+                                     'prod-private-service-us-east-1d',
+                                     'prod-private-service-us-east-1e',
+                                     'prod-private-tools-us-east-1a',
+                                     'prod-private-tools-us-east-1c',
+                                     'prod-private-tools-us-east-1d',
+                                     'prod-private-tools-us-east-1e']
+    }

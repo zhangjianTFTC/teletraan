@@ -88,6 +88,10 @@ public class DBEnvironDAOImpl implements EnvironDAO {
         "SELECT deploy_id FROM environs WHERE env_state='NORMAL' AND deploy_id IS NOT NULL";
     private static final String GET_ALL_ENV_IDS =
         "SELECT env_id FROM environs";
+    private static final String DELETE_SCHEDULE =
+        "UPDATE environs SET schedule_id=null where env_name=? AND stage_name=?";
+    private static final String DELETE_CLUSTER =
+        "UPDATE environs SET cluster_name=null where env_name=? AND stage_name=?";
 
     private BasicDataSource dataSource;
 
@@ -227,5 +231,15 @@ public class DBEnvironDAOImpl implements EnvironDAO {
     @Override
     public List<String> getAllEnvIds() throws Exception {
         return new QueryRunner(dataSource).query(GET_ALL_ENV_IDS, SingleResultSetHandlerFactory.<String>newListObjectHandler());
+    }
+
+    @Override
+    public void deleteSchedule(String envName, String stageName) throws Exception {
+        new QueryRunner(dataSource).update(DELETE_SCHEDULE, envName, stageName);
+    }
+
+    @Override
+    public void deleteCluster(String envName, String stageName) throws Exception {
+        new QueryRunner(dataSource).update(DELETE_CLUSTER, envName, stageName);
     }
 }

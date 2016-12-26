@@ -175,6 +175,7 @@ def clone_from_stage_name(request, env_name, stage_name, from_env_name, from_sta
     new_data['watchRecipients'] = from_stage['watchRecipients']
     new_data['maxDeployNum'] = from_stage['maxDeployNum']
     new_data['maxDeployDay'] = from_stage['maxDeployDay']
+    new_data['overridePolicy'] = from_stage['overridePolicy']
 
     new_stage = environs_helper.create_env(request, new_data)
 
@@ -200,11 +201,6 @@ def get_cluster_name(request, name, stage):
     return env.get('clusterName')
 
 
-def get_non_cmp_group(request, name, stage):
+def get_env_groups(request, name, stage):
     groups = environs_helper.get_env_capacity(request, name, stage, capacity_type="GROUP")
-    if IS_PINTEREST:
-        basic_cluster_info = clusters_helper.get_cluster(request, name, stage)
-        if basic_cluster_info:
-            cluster_name = get_cluster_name(request, name, stage)
-            groups.remove(cluster_name)
     return groups
